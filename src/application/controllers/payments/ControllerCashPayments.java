@@ -24,7 +24,7 @@ public class ControllerCashPayments extends Controller {
         Button btnInsert = view.getBtnInsert();
         btnInsert.setOnAction(event -> {
             Date date = Date.valueOf(view.getDtpDate().getValue());
-            String name = view.getTxtName().getText();
+            ModelPerson person = view.getCbxPerson().getValue();
             Double amount = null;
             try {
                 amount = Double.valueOf(view.getTxtAmount().getText());
@@ -34,9 +34,9 @@ public class ControllerCashPayments extends Controller {
                 return;
             }
             String description = view.getTxtDescription().getText();
-            if (name == null) return;
+            if (person == null) return;
             try {
-                ModelTransaction mt = new ModelTransaction(null, ModelPerson.getByName(name), amount, date, description, ModelTransaction.Type.CASH_PAYMENT, false, null);
+                ModelTransaction mt = new ModelTransaction(null, person, amount, date, description, ModelTransaction.Type.CASH_PAYMENT, false, null);
                 if(mt.insert()) {
                     ObservableList<ModelTransaction> list = view.getTblIncome().getItems();
                     for (int i = 0; i < list.size(); i++) {
@@ -46,7 +46,6 @@ public class ControllerCashPayments extends Controller {
                         }
                     }
                     view.getDtpDate().setValue(LocalDate.now());
-                    view.getTxtName().clear();
                     view.getTxtAmount().clear();
                     view.getTxtDescription().clear();
                     view.getTblIncome().refresh();

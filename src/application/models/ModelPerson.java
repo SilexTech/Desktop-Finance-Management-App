@@ -66,23 +66,23 @@ public class ModelPerson extends Model {
     }
 
     public static ModelPerson getByID(int ID) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM persons WHERE personID = ?");
-        preparedStatement.setInt(1, ID);
-        ResultSet resultSet = preparedStatement.executeQuery();
         ModelPerson person = null;
-        if (resultSet.next()) {
-            person = parseResultSet(resultSet);
+        for (ModelPerson p : persons) {
+            if (p.getPersonID() == ID) {
+                person = p;
+                break;
+            }
         }
         return person;
     }
 
     public static ModelPerson getByName(String name) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM persons WHERE name = ?");
-        preparedStatement.setString(1, name);
-        ResultSet resultSet = preparedStatement.executeQuery();
         ModelPerson person = null;
-        if (resultSet.next()) {
-            person = parseResultSet(resultSet);
+        for (ModelPerson p : persons) {
+            if (p.getName().equals(name)) {
+                person = p;
+                break;
+            }
         }
         return person;
     }

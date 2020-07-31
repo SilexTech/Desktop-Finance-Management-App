@@ -23,7 +23,7 @@ public class ControllerIncome extends Controller {
         Button btnInsert = view.getBtnInsert();
         btnInsert.setOnAction(event -> {
             Date date = Date.valueOf(view.getDtpDate().getValue());
-            String name = view.getTxtName().getText();
+            ModelPerson person = view.getCbxPerson().getValue();
             Double amount = null;
             try {
                 amount = Double.valueOf(view.getTxtAmount().getText());
@@ -33,15 +33,14 @@ public class ControllerIncome extends Controller {
                 return;
             }
             String description = view.getTxtDescription().getText();
-            if (name == null) return;
+            if (person == null) return;
             try {
-                ModelTransaction mt = new ModelTransaction(null, ModelPerson.getByName(name), amount, date, description, ModelTransaction.Type.CLAIM, false, null);
+                ModelTransaction mt = new ModelTransaction(null, person, amount, date, description, ModelTransaction.Type.CLAIM, false, null);
                 if(mt.insert()) {
                     ObservableList<ModelTransaction> list = view.getTblIncome().getItems();
                     ModelTransaction.getTransactions().add(mt);
                     view.getTblIncome().getSelectionModel().select(list.indexOf(mt));
                     view.getDtpDate().setValue(LocalDate.now());
-                    view.getTxtName().clear();
                     view.getTxtAmount().clear();
                     view.getTxtDescription().clear();
                     view.getTblIncome().refresh();
