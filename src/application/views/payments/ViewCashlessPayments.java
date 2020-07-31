@@ -25,7 +25,7 @@ public class ViewCashlessPayments extends View {
     private TableView<ModelTransaction> tblIncome = new TableView<>();
 
     private DatePicker dtpDate = new DatePicker();
-    private TextField txtName = new TextField();
+    private ComboBox<ModelPerson> cbxPerson = new ComboBox<>();
     private TextField txtAmount = new TextField();
     private TextField txtDescription = new TextField();
     private Button btnInsert = new Button("Unos");
@@ -42,8 +42,8 @@ public class ViewCashlessPayments extends View {
         return dtpDate;
     }
 
-    public TextField getTxtName() {
-        return txtName;
+    public ComboBox<ModelPerson> getCbxPerson() {
+        return cbxPerson;
     }
 
     public TextField getTxtAmount() {
@@ -89,6 +89,13 @@ public class ViewCashlessPayments extends View {
         tblIncome.setItems(income);
         income.predicateProperty().bind(Bindings.createObjectBinding(incomeFilter::get));
 
+        ObjectProperty<Predicate<ModelPerson>> clientFilter = new SimpleObjectProperty<>();
+        clientFilter.bind(Bindings.createObjectBinding(() ->
+                person -> person.getType() == ModelPerson.Type.LEGAL_CLIENT));
+        FilteredList<ModelPerson> clients = new FilteredList<>(ModelPerson.getPersons());
+        clients.predicateProperty().bind(Bindings.createObjectBinding(clientFilter::get));
+        cbxPerson.setItems(clients);
+
         tblIncome.getColumns().addAll(tableColumnDate, tableColumnPerson, tableColumnAmount, tableColumnDescription);
 
         tblIncome.widthProperty().addListener((source, oldWidth, newWidth) -> {
@@ -107,10 +114,10 @@ public class ViewCashlessPayments extends View {
 
         dtpDate.setPrefWidth(100);
         dtpDate.setValue(LocalDate.now());
-        txtName.setPrefWidth(200);
+        cbxPerson.setPrefWidth(200);
         txtAmount.setPrefWidth(100);
         txtDescription.setPrefWidth(200);
-        inputs.getChildren().addAll(dtpDate, txtName, txtAmount, txtDescription, btnInsert);
+        inputs.getChildren().addAll(dtpDate, cbxPerson, txtAmount, txtDescription, btnInsert);
 
         borderPane.setBottom(inputs);
 

@@ -25,7 +25,8 @@ public class ViewIncome extends View {
     private TableView<ModelTransaction> tblIncome = new TableView<>();
 
     private DatePicker dtpDate = new DatePicker();
-    private TextField txtName = new TextField();
+
+    private ComboBox<ModelPerson> cbxPerson = new ComboBox<>();
     private TextField txtAmount = new TextField();
     private TextField txtDescription = new TextField();
     private Button btnInsert = new Button("Unos");
@@ -42,8 +43,8 @@ public class ViewIncome extends View {
         return dtpDate;
     }
 
-    public TextField getTxtName() {
-        return txtName;
+    public ComboBox<ModelPerson> getCbxPerson() {
+        return cbxPerson;
     }
 
     public TextField getTxtAmount() {
@@ -85,8 +86,8 @@ public class ViewIncome extends View {
         incomeFilter.bind(Bindings.createObjectBinding(() ->
                 transaction -> transaction.getType() == ModelTransaction.Type.CLAIM));
         FilteredList<ModelTransaction> income = new FilteredList<>(ModelTransaction.getTransactions());
-        tblIncome.setItems(income);
         income.predicateProperty().bind(Bindings.createObjectBinding(incomeFilter::get));
+        tblIncome.setItems(income);
 
         tblIncome.getColumns().addAll(tableColumnDate, tableColumnPerson, tableColumnAmount, tableColumnDescription);
 
@@ -95,16 +96,23 @@ public class ViewIncome extends View {
             header.reorderingProperty().addListener((observable, oldValue, newValue) -> header.setReordering(false));
         });
 
+        ObjectProperty<Predicate<ModelPerson>> clientFilter = new SimpleObjectProperty<>();
+        clientFilter.bind(Bindings.createObjectBinding(() ->
+                person -> person.getType() == ModelPerson.Type.LEGAL_CLIENT || person.getType() == ModelPerson.Type.NATURAL_CLIENT));
+        FilteredList<ModelPerson> clients = new FilteredList<>(ModelPerson.getPersons());
+        clients.predicateProperty().bind(Bindings.createObjectBinding(clientFilter::get));
+        cbxPerson.setItems(clients);
+
         borderPane.setCenter(tblIncome);
 
         HBox inputs = new HBox();
 
         dtpDate.setPrefWidth(100);
         dtpDate.setValue(LocalDate.now());
-        txtName.setPrefWidth(200);
+        cbxPerson.setPrefWidth(200);
         txtAmount.setPrefWidth(100);
         txtDescription.setPrefWidth(200);
-        inputs.getChildren().addAll(dtpDate, txtName, txtAmount, txtDescription, btnInsert);
+        inputs.getChildren().addAll(dtpDate, cbxPerson, txtAmount, txtDescription, btnInsert);
 
         borderPane.setBottom(inputs);
 
