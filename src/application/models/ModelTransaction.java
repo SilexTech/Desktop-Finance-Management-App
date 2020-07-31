@@ -132,9 +132,6 @@ public class ModelTransaction extends Model {
         preparedStatement.setBoolean(6, false);
         int i = preparedStatement.executeUpdate();
         if (i == 1) {
-            preparedStatement = localConnection.prepareStatement(
-                    "INSERT INTO transactions(Person, Amount, Date, Description, Type, VAT) VALUES (?, ?, ?, ?, ?, ?)"
-            );
             preparedStatement.setInt(1, person.getPersonID());
             preparedStatement.setDouble(2, amount);
             preparedStatement.setDate(3, date);
