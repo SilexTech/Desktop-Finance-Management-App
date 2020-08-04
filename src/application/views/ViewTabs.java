@@ -1,8 +1,12 @@
 package application.views;
 
+import application.controllers.disbursements.ControllerTabDisbursements;
 import application.controllers.income_expenses.ControllerTabIncomeExpenses;
+import application.controllers.payments.ControllerTabPayments;
+import application.controllers.persons.ControllerTabPersons;
 import application.views.disbursements.ViewTabDisbursements;
 import application.views.payments.ViewTabPayments;
+import application.views.persons.ViewTabPersons;
 import javafx.scene.Group;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -24,15 +28,15 @@ public class ViewTabs extends View {
 
         Group groupPayments = new Group();
         Tab tabPayments = new Tab("Uplate", groupPayments);
-        new ViewTabPayments(groupPayments).load();
+        new ControllerTabPayments(groupPayments);
 
         Group groupDisbursements = new Group();
         Tab tabDisbursements = new Tab("Isplate", groupDisbursements);
-        new ViewTabDisbursements(groupDisbursements).load();
+        new ControllerTabDisbursements(groupDisbursements);
 
         Group groupPersons = new Group();
         Tab tabPersons = new Tab("Lica", groupPersons);
-        new ViewTabPersons(groupPersons).load();
+        new ControllerTabPersons(groupPersons);
 
         Group groupReports = new Group();
         Tab tabReports = new Tab("Izvještaji", groupReports);

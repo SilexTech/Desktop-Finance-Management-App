@@ -132,13 +132,6 @@ public class ModelTransaction extends Model {
         preparedStatement.setBoolean(6, false);
         int i = preparedStatement.executeUpdate();
         if (i == 1) {
-            preparedStatement.setInt(1, person.getPersonID());
-            preparedStatement.setDouble(2, amount);
-            preparedStatement.setDate(3, date);
-            preparedStatement.setString(4, description);
-            preparedStatement.setString(5, type.toString());
-            preparedStatement.setBoolean(6, false);
-            i = preparedStatement.executeUpdate();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM transactions ORDER BY TransactionID LIMIT 1");
             if (resultSet.next()) {

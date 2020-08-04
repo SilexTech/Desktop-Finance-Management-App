@@ -10,15 +10,15 @@ import java.sql.Statement;
 
 public class ModelPerson extends Model {
 
-    public enum Type { NATURAL, LEGAL, NATURAL_SUPPLIER, NATURAL_CLIENT, LEGAL_SUPPLIER, LEGAL_CLIENT };
+    public enum Type { NATURAL_SUPPLIER, NATURAL_CLIENT, LEGAL_SUPPLIER, LEGAL_CLIENT };
 
     private static ObservableList<ModelPerson> persons = FXCollections.observableArrayList();
 
-    private final int personID;
+    private Integer personID;
     private String name;
     private ModelPerson.Type type;
 
-    public ModelPerson(int personID, String name, Type type) {
+    public ModelPerson(Integer personID, String name, Type type) {
         this.personID = personID;
         this.name = name;
         this.type = type;
@@ -93,7 +93,21 @@ public class ModelPerson extends Model {
     }
 
     @Override
-    public boolean insert() {
+    public boolean insert() throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "INSERT INTO persons(Name, Type) VALUES (?, ?)"
+        );
+        preparedStatement.setString(1, name);
+        preparedStatement.setString(2, type.toString());
+        int i = preparedStatement.executeUpdate();
+        if (i == 1) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM persons ORDER BY PersonID DESC LIMIT 1");
+            if (resultSet.next()) {
+                this.personID = parseResultSet(resultSet).personID;
+            }
+            return true;
+        }
         return false;
     }
 

@@ -39,6 +39,7 @@ public class ControllerCashPayments extends Controller {
                 ModelTransaction mt = new ModelTransaction(null, person, amount, date, description, ModelTransaction.Type.CASH_PAYMENT, false, null);
                 if(mt.insert()) {
                     ObservableList<ModelTransaction> list = view.getTblIncome().getItems();
+                    list.add(mt);
                     for (int i = 0; i < list.size(); i++) {
                         if (list.get(i) == mt) {
                             view.getTblIncome().getSelectionModel().select(i);
@@ -46,6 +47,7 @@ public class ControllerCashPayments extends Controller {
                         }
                     }
                     view.getDtpDate().setValue(LocalDate.now());
+                    view.getCbxPerson().setValue(null);
                     view.getTxtAmount().clear();
                     view.getTxtDescription().clear();
                     view.getTblIncome().refresh();
